@@ -8,9 +8,9 @@ import rospkg
 import signal
 import numpy as np
 
-print "tf import"
+print("tf import")
 import tf
-print "done tf import"
+print("done tf import")
 
 
 import command_values as cmds
@@ -45,9 +45,9 @@ class FlightController(object):
 
     def __init__(self):
         # Connect to the flight controller board
-        print "getboard"
+        print("getboard")
         self.board = self.getBoard()
-        print "done"
+        print("done")
         # stores the current and previous modes
         self.curr_mode = 'DISARMED'         #initialize as disarmed
         self.prev_mode = 'DISARMED'         #initialize as disarmed
@@ -66,10 +66,10 @@ class FlightController(object):
         # published (you will do this in another TODO).
         # Hint: investigate the Header message type, the Imu
         # message type, and rospy.Time.
-        self.imu_message = ???
-        self.imu_message.header = ???
+        self.imu_message = ...
+        self.imu_message.header = ...
         self.imu_message.header.frame_id = 'Body'
-        self.imu_message.header.stamp = ???
+        self.imu_message.header.stamp = ...
 
         # Initialize the Battery Message
         ################################
@@ -77,25 +77,26 @@ class FlightController(object):
         # In a different method, the message will be updated and
         # published (you will do this in another TODO). Hint: read
         # the Battery message file in the pidrone_pkg msg folder.
-        self.battery_message = ???
-        self.battery_message.??? = None
-        self.battery_message.??? = None
+        self.battery_message = ...
+        self.battery_message.CHANGE_FIELD_HERE = None
+        self.battery_message.CHANGE_FIELD_HERE = None
        
         # Adjust this based on how low the battery should discharge
         self.minimum_voltage = 4.5
 
         # Accelerometer parameters
         ##########################
-        print "loading"
+        print("loading")
         rospack = rospkg.RosPack()
         path = rospack.get_path('pidrone_pkg')
         with open("%s/params/multiwii.yaml" % path) as f:
             means = yaml.load(f)
-        print "done"
+        print("done")
         self.accRawToMss = 9.8 / means["az"]
-        self.accZeroX = means["ax"] * self.accRawToMss
-        self.accZeroY = means["ay"] * self.accRawToMss
-        self.accZeroZ = means["az"] * self.accRawToMss
+        self.accZeroX=means["ax"] * self.accRawToMss
+        self.accZeroY=means["ay"] * self.accRawToMss
+        self.accZeroZ=means["az"] * self.accRawToMss
+        pass
 
 
     # ROS subscriber callback methods:
@@ -132,9 +133,9 @@ class FlightController(object):
         # Hint: what data is in self.board.attitude? What about
         # self.board.rawIMU? Is the relevant data in degrees or radians?
         # Hint: yaw is sometimes referred to as "heading".
-        roll = ???
-        pitch = ???
-        heading = ???
+        roll = ...
+        pitch = ...
+        heading = ...
         # Note that at pitch angles near 90 degrees, the roll angle reading can
         # fluctuate a lot
         
@@ -150,7 +151,7 @@ class FlightController(object):
         # and vice-versa.
         # Hint: investigate tf.transformations.euler_from_quaternion.
         previous_quaternion = self.imu_message.orientation
-        previous_roll, previous_pitch, previous_heading = ???
+        previous_roll, previous_pitch, previous_heading = ...
 
         # Although quaternion_from_euler takes a heading in range [0, 2pi),
         # euler_from_quaternion returns a heading in range [0, pi] or [0, -pi).
@@ -161,14 +162,14 @@ class FlightController(object):
         # Hint: recall that Euler angles can be transformed to quaternions,
         # and vice-versa.
         # Hint: investigate tf.transformations.quaternion_from_euler.
-        quaternion = ???
+        quaternion = ...
 
         # TODO: extract the raw linear accelerations from the flight controller.
         # Hint: what data is in self.board.attitude? What about
         # self.board.rawIMU? 
-        raw_acc_x = ???
-        raw_acc_y = ???
-        raw_acc_z = ???
+        raw_acc_x = ...
+        raw_acc_y = ...
+        raw_acc_z = ...
 
         # Turn the raw linear accelerations into real accelerations
         lin_acc_x = raw_acc_x * self.accRawToMss - self.accZeroX
@@ -197,34 +198,34 @@ class FlightController(object):
 
         # calculate the angular velocities of roll, pitch, and yaw in rad/s
         time = rospy.Time.now()
-        dt = ???
-        dr = ???
-        dp = ???
-        dh = ???
+        dt = ...
+        dr = ...
+        dp = ...
+        dh = ...
         angvx = self.near_zero(dr / dt)
         angvy = self.near_zero(dp / dt)
         angvz = self.near_zero(dh / dt)
         self.time = time
 
         # TODO: Update the imu_message header stamp.
-        self.imu_message.header.stamp = ???
+        self.imu_message.header.stamp = ...
         
         # TODO: update the IMU message orientation
         # Hint: is the orientation a set of Euler angles or a quaternion?
-        self.imu_message.orientation.x = ???
-        self.imu_message.orientation.y = ???
-        self.imu_message.orientation.z = ???
-        self.imu_message.orientation.w = ???
+        self.imu_message.orientation.x = ...
+        self.imu_message.orientation.y = ...
+        self.imu_message.orientation.z = ...
+        self.imu_message.orientation.w = ...
 
         # TODO: update the IMU message angular velocities.
-        self.imu_message.??? = ang_vel_x_drone_body
-        self.imu_message.??? = ang_vel_y_drone_body
-        self.imu_message.??? = ang_vel_z_drone_body
+        self.imu_message.CHANGE_FIELD_HERE = ang_vel_x_drone_body
+        self.imu_message.CHANGE_FIELD_HERE = ang_vel_y_drone_body
+        self.imu_message.CHANGE_FIELD_HERE = ang_vel_z_drone_body
         
         # TODO: update the IMU message linear accelerations.
-        self.imu_message.linear_acceleration.x = ???
-        self.imu_message.linear_acceleration.y = ???
-        self.imu_message.linear_acceleration.z = ???
+        self.imu_message.linear_acceleration.x = ...
+        self.imu_message.linear_acceleration.y = ...
+        self.imu_message.linear_acceleration.z = ...
 
 
     def update_battery_message(self):
@@ -236,8 +237,8 @@ class FlightController(object):
 
 
         # TODO: Update Battery message:
-        self.battery_message.vbat = ??? * 0.10
-        self.battery_message.amperage = ??? 
+        self.battery_message.vbat = ... * 0.10
+        self.battery_message.amperage = ... 
 
 
 
@@ -260,12 +261,12 @@ class FlightController(object):
         try:
             board = MultiWii('/dev/ttyUSB0')
         except SerialException as e:
-            print("usb0 failed: " + str(e))
+            print(("usb0 failed: " + str(e)))
             try:
                 board = MultiWii('/dev/ttyUSB1')
             except SerialException:
-                print '\nCannot connect to the flight controller board.'
-                print 'The USB is unplugged. Please check connection.'
+                print('\nCannot connect to the flight controller board.')
+                print('The USB is unplugged. Please check connection.')
                 raise
                 sys.exit()
         return board
@@ -275,7 +276,7 @@ class FlightController(object):
         self.board.sendCMD(8, MultiWii.SET_RAW_RC, self.command)
         self.board.receiveDataPacket()
         if (self.command != self.last_command):
-            print 'command sent:', self.command
+            print(('command sent:', self.command))
             self.last_command = self.command
 
     def near_zero(self, n):
@@ -284,12 +285,12 @@ class FlightController(object):
 
     def ctrl_c_handler(self, signal, frame):
         """ Disarm the drone and quits the flight controller node """
-        print "\nCaught ctrl-c! About to Disarm!"
+        print("\nCaught ctrl-c! About to Disarm!")
         self.board.sendCMD(8, MultiWii.SET_RAW_RC, cmds.disarm_cmd)
         self.board.receiveDataPacket()
         rospy.sleep(1)
         self.modepub.publish('DISARMED')
-        print "Successfully Disarmed"
+        print("Successfully Disarmed")
         sys.exit()
 
     # Heartbeat Callbacks: These update the last time that data was received
@@ -334,7 +335,7 @@ class FlightController(object):
             disarm = True
 
         if self.range > 0.5:
-            print('\nSafety Failure: too high: ' + str(self.range))
+            print(('\nSafety Failure: too high: ' + str(self.range)))
             disarm = True            
         if curr_time - self.heartbeat_state_estimator > rospy.Duration.from_sec(1):
             print('\nSafety Failure: not receiving a state estimate.')
@@ -348,9 +349,9 @@ def main():
     # ROS Setup
     ###########
     node_name = os.path.splitext(os.path.basename(__file__))[0]
-    print "init"
+    print("init")
     rospy.init_node(node_name)
-    print "done"
+    print("done")
     # create the FlightController object
     fc = FlightController()
     curr_time = rospy.Time.now()
@@ -366,10 +367,10 @@ def main():
     imupub = rospy.Publisher('/pidrone/imu', Imu, queue_size=1, tcp_nodelay=False)
     batpub = rospy.Publisher('/pidrone/battery', Battery, queue_size=1, tcp_nodelay=False)
     fc.modepub = rospy.Publisher('/pidrone/mode', Mode, queue_size=1, tcp_nodelay=False)
-    print 'Publishing:'
-    print '/pidrone/imu'
-    print '/pidrone/mode'
-    print '/pidrone/battery'
+    print('Publishing:')
+    print('/pidrone/imu')
+    print('/pidrone/mode')
+    print('/pidrone/battery')
 
     # Subscribers
     ############
@@ -391,7 +392,7 @@ def main():
             # preform as safety check
                 # Break the loop if a safety check has failed
             if fc.shouldIDisarm():
-                print "mode", fc.curr_mode
+                print(("mode", fc.curr_mode))
                 break
                 
             # update and publish flight controller readings
@@ -411,14 +412,14 @@ def main():
             r.sleep()
             
     except SerialException:
-        print '\nCannot connect to the flight controller board.'
-        print 'The USB is unplugged. Please check connection.'
+        print('\nCannot connect to the flight controller board.')
+        print('The USB is unplugged. Please check connection.')
     except Exception as e:
-        print 'there was an internal error', e
-        print traceback.format_exc()
+        print(('there was an internal error', e))
+        print((traceback.format_exc()))
     finally:
-        print 'Shutdown received'
-        print 'Sending DISARM command'
+        print('Shutdown received')
+        print('Sending DISARM command')
         fc.board.sendCMD(8, MultiWii.SET_RAW_RC, cmds.disarm_cmd)
         fc.board.receiveDataPacket()
 

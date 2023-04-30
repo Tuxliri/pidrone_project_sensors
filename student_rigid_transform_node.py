@@ -74,17 +74,17 @@ class RigidTransformNode(object):
         # TODO: subscribe to /pidrone/reset_transform
             # message type: Empty
             # callback method: reset_callback
-        self._rtsub = ???
+        self._rtsub = ...
 
         # TODO: subscribe to /pidrone/position_control
             # message type: Bool
             # callback method: position_control_callback
-        self._pcsub = ???
+        self._pcsub = ...
 
         # TODO: subscribe to /pidrone/state
             # message type: State
             # callback method: state_callback
-        self._stsub = ???
+        self._stsub = ...
         
         # Additional Subscribers
         self._isub = rospy.Subscriber("/raspicam_node/image/compressed", CompressedImage, self.image_callback, queue_size=1)
@@ -176,7 +176,7 @@ class RigidTransformNode(object):
                     self.first_image_counter += 1
                     self.max_first_counter = max(self.max_first_counter, self.first_image_counter)
                     self.last_first_time = rospy.get_time()
-                    print("count:", self.first_image_counter)
+                    print(("count:", self.first_image_counter))
                 # else the first image was not visible (the transformation was not succesful) :
                 else:
                     # try to estimate the transformation from the previous image
@@ -189,8 +189,8 @@ class RigidTransformNode(object):
                         if self.last_first_time is None:
                             self.last_first_time = rospy.get_time()
                         time_since_first = rospy.get_time() - self.last_first_time
-                        print("integrated", time_since_first)
-                        print("max_first_counter: ", self.max_first_counter)
+                        print(("integrated", time_since_first))
+                        print(("max_first_counter: ", self.max_first_counter))
                         int_displacement, yaw_previous = self.translation_and_yaw(transform_previous)
                         
                         # TODO calculate the position by adding the displacement to the previous
@@ -199,8 +199,8 @@ class RigidTransformNode(object):
                         # HINT: use self.x_position_from_state and self.y_position_from_state as the
                         # previous position
 
-                        self.pose_msg.pose.position.x = self.x_position_from_state + ???
-                        self.pose_msg.pose.position.y = self.y_position_from_state + ???
+                        self.pose_msg.pose.position.x = self.x_position_from_state + ...
+                        self.pose_msg.pose.position.y = self.y_position_from_state + ...
                         
                         
                         
@@ -247,14 +247,14 @@ class RigidTransformNode(object):
         # TODO: extract the translation information from the transform variable. Divide the 
         # the x displacement by 320, which is the width of the camera resolution. Divide the
         # y displacement by 240, the height of the camera resolution.
-        pixel_translation_x_y = ??? 
+        pixel_translation_x_y = ... 
         
         real_translation_x_y = [0.0, 0.0]
         real_translation_x_y[0] = (pixel_translation_x_y[0] / CAMERA_WIDTH_PIXELS) * self.altitude
         real_translation_x_y[1] = (pixel_translation_x_y[1] / CAMERA_HEIGHT_PIXELS) * self.altitude
 
         # TODO: use np.arctan2 and the transform variable to calculate the yaw
-        yaw = ???
+        yaw = ...
         
         return real_translation_x_y, yaw
 
